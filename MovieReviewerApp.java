@@ -1,6 +1,10 @@
 import javafx.application.Application;
 import javafx.stage.Stage;
-
+/**
+ * Launches Java application
+ * @author anush
+ *
+ */
 public class MovieReviewerApp extends Application{
 
 	private View myView;
