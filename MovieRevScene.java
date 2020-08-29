@@ -12,6 +12,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+/**
+ * Scene that is set when application is viewed
+ * @author anush
+ *
+ */
 public class MovieRevScene extends Scene
 {
 
@@ -57,10 +62,14 @@ public class MovieRevScene extends Scene
 		contents.setSpacing(30);
 
 		myRoot.setCenter(contents);
-
+		
+		/**
+		 * Once this button is pressed, the rating of the review is displayed
+		 */
 		getRating.setOnAction(e -> {
 			String i = input.getText();
 			String r = myReviewer.getAutomatedRating(i) + "";
+			/*If there are no recognizable words in the review an error message is displayed*/
 			if(myReviewer.getAutomatedRating(i) == -1)
 			{
 				input.setText(i + "\n" + "A rating cannot be calculated for this review as there is too many unfamiliar words.");
@@ -68,7 +77,10 @@ public class MovieRevScene extends Scene
 			else
 				displayRating.setText(r);
 		});
-
+		
+		/**
+		 * Sets the clear button to empty the text box once pressed
+		 */
 		clear.setOnAction(e -> {
 			input.setText("");
 		});
