@@ -2,7 +2,11 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import mickel.gui.GUI;
+/**
+ * Allows viewing of application
+ * @author anush
+ *
+ */
 public class View
 {
 	private Stage myStage;
@@ -13,8 +17,6 @@ public class View
 	public View()
 	{
 		myScene = new MovieRevScene(new BorderPane());
-
-		//GUI.highlight(myTranslateScene);
 	}
 
 	public Stage getStage()
