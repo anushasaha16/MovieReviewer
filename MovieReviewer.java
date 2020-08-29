@@ -5,11 +5,16 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
+/**
+ * MovieReviewer class provides methods to calculate an automated rating for an user's review
+ * @author anush
+ *
+ */
 public class MovieReviewer
 {
-	private Map<String, Integer> myReviews;
-	private Map<String, Word> myWords;
-	private Map<Word, Integer> mySentimentRatings;
+	private Map<String, Integer> myReviews;			//maps String reviews to their rating indicated by the text file	
+	private Map<String, Word> myWords;				//maps String words to Word object
+	private Map<Word, Integer> mySentimentRatings;	//maps each Word to their calculated sentiment rating
 
 	public MovieReviewer()
 	{
@@ -18,7 +23,10 @@ public class MovieReviewer
 		mySentimentRatings = new HashMap<>();
 		this.loadDataFromFile();
 	}
-
+	
+	/**
+	 * reads data from text file "moviereviews.txt" and puts it into maps to be accessed in other methods
+	 */
 	private void loadDataFromFile()
 	{
 		try
@@ -32,25 +40,24 @@ public class MovieReviewer
 				int rating = Integer.parseInt(parts[0]);
 				String s = line.substring(2);
 				myReviews.put(s, rating);
-				for(int i = 1; i < parts.length; i++)
+				String[] words = s.toLowerCase().split("[^a-zA-Z0-9'-]+");
+				for(String w: words)
 				{
-					if(this.isPunctuation(parts[i]) == false)
+					if(!myWords.containsKey(w))
 					{
-						if(!myWords.containsKey(parts[i]))
-						{
-							Word w = new Word(parts[i], rating, 1);
-							myWords.put(parts[i], w);
-							mySentimentRatings.put(w, rating);
-						}
-						else
-						{
-							Word w = myWords.get(parts[i]);
-							w.addToTotalWeight(rating);
-							w.addToTotalCount();
-							myWords.put(parts[i], w);
-							mySentimentRatings.put(w, w.getSentimentRating());
-						}
+						Word word = new Word(w, rating, 1);
+						myWords.put(w, word);
+						mySentimentRatings.put(word, rating);
 					}
+					else
+					{
+						Word word = myWords.get(w);
+						word.addToTotalWeight(rating);
+						word.addToTotalCount();							
+						myWords.put(w, word);
+						mySentimentRatings.put(word, word.getSentimentRating());
+					}
+					
 				}
 			}
 			scan.close();
@@ -60,11 +67,16 @@ public class MovieReviewer
 			System.out.println("File Not Found. No Data Loaded");
 		}
 	}
-
+	
+	/**
+	 * Takes the average of the sentiment ratings of all words in the given review and returns that as the automated
+	 * rating of the review
+	 * @param rev	User-inputted review
+	 * @return		calculated automated rating of user's review or -1 if rating was not able to be calculated
+	 */
 	public int getAutomatedRating(String rev)
 	{
-		String result = rev.replaceAll("\\p{Punct}", " $0 ");
-		String[] words = result.split(" ");
+		String[] words = rev.toLowerCase().split("[^a-zA-Z0-9'-]+");
 		int totalRating = 0;
 		int totalWords = 0;
 		for(int i = 0; i < words.length; i++)
@@ -85,18 +97,5 @@ public class MovieReviewer
 
 		return -1;
 	}
-
-	public boolean isPunctuation(String c)
-	{
-		String punctuations = ".,:;!?'";
-		if(punctuations.contains(c))
-			return true;
-		return false;
-	}
-
-	public void exitProgram()
-	{
-		System.exit(0);
-	}
-
+	
 }
